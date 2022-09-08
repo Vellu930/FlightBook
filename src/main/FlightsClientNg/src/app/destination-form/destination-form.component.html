@@ -1,0 +1,9 @@
+<p>destination-form works!</p>
+
+<form (ngSubmit)="onSubmit()" #destinationForm="ngForm">
+    <label for="destNameInput">Name of new destination:</label>
+    <input type="text" [(ngModel)]="destination.name" 
+        id="destNameInput" name="name" required #name="ngModel">
+
+    <button type="submit" (click)="onSubmit()">Save</button>
+</form>
