@@ -1,9 +1,22 @@
-<p>destination-form works!</p>
+<div class="container">
+    <p>destination-form works!</p>
 
-<form (ngSubmit)="onSubmit()" #destinationForm="ngForm">
-    <label for="destNameInput">Name of new destination:</label>
-    <input type="text" [(ngModel)]="destination.name" 
-        id="destNameInput" name="name" required #name="ngModel">
+<form  (ngSubmit)="onSubmit(destForm)" #destForm="ngForm">
 
-    <button type="submit" (click)="onSubmit()">Save</button>
+    <label for="idInput">Destination id (number):</label>
+    <input class="form-control" type="text" name="id" ngModel>
+
+    <label for="nameInput">Name of new destination:</label>
+    <input class="form-control" type="text" name="name" ngModel>
+
+    <button class="button" type="submit">Save me!</button>
+
+    <!-- <label for="idInput">Destination id (number):</label>
+    <input class="form-control" type="text" [(ngModel)]="dest.id" id="idInput" name="dest.id" required>
+
+    <label for="nameInput">Name of new destination:</label>
+    <input class="form-control" type="text" [(ngModel)]="dest.name" id="nameInput" name="dest.name" required>
+
+    <button class="button" type="submit" (click)="onSubmit()">Save</button> -->
 </form>
+</div>

@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 import { DestListComponent } from './dest-list/dest-list.component';
 import { DestinationFormComponent } from './destination-form/destination-form.component';
 import { DestinationService } from './destination.service';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { DestinationService } from './destination.service';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    NgbModule
   ],
   providers: [DestinationService],
   bootstrap: [AppComponent]

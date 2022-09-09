@@ -9,9 +9,11 @@ import { Observable } from 'rxjs';
 export class DestinationService {
 
   private destUrl: string;
+  private destPostUrl: string;
 
   constructor(private http: HttpClient) {
     this.destUrl = 'http://localhost:8080/destinations';
+    this.destPostUrl = 'http://localhost:8080/newDestination'
   }
 
   public findAll(): Observable<Destination[]> {
@@ -19,6 +21,6 @@ export class DestinationService {
   }
 
   public save(destination: Destination) {
-    return this.http.post<Destination>(this.destUrl, destination);
+    return this.http.post<Destination>(this.destPostUrl, destination);
   }
 }

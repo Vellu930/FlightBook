@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Destination } from '../destination';
 import { DestinationService } from '../destination.service';
@@ -10,17 +11,28 @@ import { DestinationService } from '../destination.service';
 })
 export class DestinationFormComponent {
 
-  destination: Destination;
+  dest!: Destination;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private service: DestinationService) {
-      this.destination = new Destination(2345, "Barcelona");
+      // this.dest.id = 123456;
+      // this.dest.name = "GoldTown";
      }
 
-  onSubmit() {
-    this.service.save(this.destination).subscribe( result => this.router.navigate(['/destinations']))
-  }
+  onSubmit(destForm: NgForm) {
+
+    this.dest = destForm.value;
+
+    console.log("Destination name: " + this.dest.name);
+    console.log(destForm)
+
+    console.log("Saving destination: " + this.dest.name + " with a chosen ID: " + this.dest.id);
+
+    this.service.save(this.dest).subscribe( result => 
+        this.router.navigate(['/destinations']) 
+        )
+    }
 
 }
