@@ -5,7 +5,7 @@ import { DestinationFormComponent } from './destination-form/destination-form.co
 
 const routes: Routes = [
   {path: 'destinations' , component: DestListComponent },
-  {path: 'newDestination' , component: DestinationFormComponent }
+  {path: 'destinationForm' , component: DestinationFormComponent }
 ];
 
 @NgModule({

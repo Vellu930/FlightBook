@@ -21,7 +21,7 @@ public class FlightBookApplication {
 		return args -> {
 			Stream.of("Paris", "Rome", "Malaga", "London", "Singapore").forEach(name -> {
 				Destination dest = new Destination();
-				dest.setDestinationId((long) (Math.random() * 150000));
+				dest.setId((long) (Math.random() * 150000));
 				dest.setName(name);
 				repo.save(dest);
 			});

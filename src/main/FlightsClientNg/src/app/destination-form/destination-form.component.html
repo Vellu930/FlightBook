@@ -4,10 +4,10 @@
 <form  (ngSubmit)="onSubmit(destForm)" #destForm="ngForm">
 
     <label for="idInput">Destination id (number):</label>
-    <input class="form-control" type="text" name="id" ngModel>
+    <input class="form-control" type="number" id="idInput" name="id" ngModel>
 
     <label for="nameInput">Name of new destination:</label>
-    <input class="form-control" type="text" name="name" ngModel>
+    <input class="form-control" type="text" id="nameInput" name="name" ngModel>
 
     <button class="button" type="submit">Save me!</button>
 

@@ -26,7 +26,7 @@ export class DestinationFormComponent {
     this.dest = destForm.value;
 
     console.log("Destination name: " + this.dest.name);
-    console.log(destForm)
+    console.log(this.dest)
 
     console.log("Saving destination: " + this.dest.name + " with a chosen ID: " + this.dest.id);
 

@@ -21,6 +21,7 @@ export class DestinationService {
   }
 
   public save(destination: Destination) {
+    console.log("Service client saving destination with id: " + destination.id)
     return this.http.post<Destination>(this.destPostUrl, destination);
   }
 }
