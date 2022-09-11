@@ -1,5 +1,6 @@
+import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { NgForm, NgModel } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Destination } from '../destination';
 import { DestinationService } from '../destination.service';
@@ -11,28 +12,58 @@ import { DestinationService } from '../destination.service';
 })
 export class DestinationFormComponent {
 
-  dest!: Destination;
+  startDest: Destination;
+  targetDest: Destination;
+  departure: Date = new Date();
+  arrival: Date = new Date();
+  isOneWay: boolean = false;
+  departDate: string = "";
+  arriveDate: string = "";
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private service: DestinationService) {
-      // this.dest.id = 123456;
-      // this.dest.name = "GoldTown";
-     }
+      this.startDest = {
+        id: 23,
+        name: 'Brno'
+      }
+      this.targetDest = {
+        id: 123,
+        name: 'Ostrava'
+      }
+      // setting Date to current date plus X days - as default for datepicker
+      this.departure.setDate(this.departure.getDate() + 5);
+      this.arrival.setDate(this.departure.getDate() + 10);
+      this.departDate = this.customStringDate(this.departure); 
+  }
 
   onSubmit(destForm: NgForm) {
 
-    this.dest = destForm.value;
+    this.isOneWay = destForm.value.isOneWay;
+    this.departure = destForm.value.departure;
+    this.arrival = destForm.value.arrival;
+    this.startDest.name = destForm.value.startDest;
+    this.targetDest.name = destForm.value.targetDest;
 
-    console.log("Destination name: " + this.dest.name);
-    console.log(this.dest)
+    // the Date from datepicker
+    this.departDate = this.customStringDate(this.departure);
+    console.log("Searching flights for destinations: " + this.startDest.name + " - " + this.targetDest.name
+     + " with departure date: " +this.departDate);
+  }
 
-    console.log("Saving destination: " + this.dest.name + " with a chosen ID: " + this.dest.id);
+  /**
+   * Converts date from Date object to a nice readable string
+   * @param date current date from input or default
+   * @returns string with date in format dd/MM/yyyy
+   */
+  customStringDate(date: Date): string {
+    return new Date(date).getDate() + "/" + (new Date(date).getMonth()+1) + "/" + new Date(date).getFullYear()
+  }
 
-    this.service.save(this.dest).subscribe( result => 
-        this.router.navigate(['/destinations']) 
-        )
-    }
+  ngOnInit(): void {
+    console.log("Initial dates value: " + this.customStringDate(this.departure) +
+    ", arrival: " + this.customStringDate(this.arrival));
+  }
 
 }
