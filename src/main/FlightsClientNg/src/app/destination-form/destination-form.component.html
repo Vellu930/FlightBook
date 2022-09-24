@@ -13,7 +13,8 @@
 
     <div class="form-group">
         <label class="m-2" for="one-way"> One-way </label>
-        <input class="form-check-input m-2 mx-auto" type="checkbox" id="one-way" [checked]="isOneWay">
+        <input class="form-check-input m-2 mx-auto" type="checkbox" id="one-way" formControlName="oneWayChecker" 
+        (change)="onCheckboxChange($event)">
     </div>
 
     <div class="row w-50 m-2 mx-auto">
@@ -21,13 +22,13 @@
             <label class="m-2" for="departure"> Departure: </label> <br>
             <input class="m-2 input-date" type="date" id="departure" formControlName="departureControl"> <br>
         </div>
-        <div *ngIf="!isOneWay" class="form-group col-lg-6 mx-auto">
+        <div *ngIf="!oneWay" class="form-group col-lg-6 mx-auto">
             <label class="m-2" for="arrival"> Arrival: </label> <br>
             <input class="m-2 input-date" type="date" id="arrival" formControlName="arrivalControl">
         </div>
     </div>
 
-    <button class="btn btn-dark m-5 w-25 h-25" type="button" (click)="onSubmit()"> Search destinations! </button>
+    <button class="btn btn-dark m-5 w-25 h-25" type="button" [disabled]="!searchForm.valid" (click)="onSubmit()"> Search destinations! </button>
 
     <p>* by clicking this button you agree to privacy terms violation.</p>
     <p>(just kidding, I'm not interested in your data!)</p>
