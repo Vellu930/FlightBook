@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Destination } from '../destination';
 import { DestinationService } from '../destination.service';
 
@@ -11,7 +12,10 @@ export class DestListComponent implements OnInit {
 
   destinations: Destination[] = [];
 
-  constructor(private service: DestinationService ) {
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private service: DestinationService) {
    }
 
   ngOnInit(): void {

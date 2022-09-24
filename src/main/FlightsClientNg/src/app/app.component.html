@@ -1,11 +1,7 @@
-<h2>{{ title }}</h2>
-<ul>
-  <li>
-    <a routerLink="/destinations" class="">List Destinations</a>
-  </li>
-  <li>
-    <a routerLink="/destinationForm" class="">Add Destination</a>
-  </li>
-</ul>
+<div class="container transparent-bg">
+  <h1> Find the cheapest flights! </h1>
 
-<router-outlet></router-outlet>
+  <app-destination-form></app-destination-form>
+
+  <app-dest-list></app-dest-list>
+</div>
