@@ -1,36 +1,33 @@
-<form class="transparent-bg container" (ngSubmit)="onSubmit(destForm)" #destForm="ngForm">
+<form class="transparent-bg container" [formGroup]="searchForm" (ngSubmit)="onSubmit()">
     <h2>Where do you wanna travel to? </h2>
 
     <div class="form-group" >
         <label class="m-2" for="startDest"> Select starting destination:</label>
-        <input class="form-control m-2 mx-auto input-extra" type="text" id="startDest" name="startDest" ngModel>
+        <input class="form-control m-2 mx-auto input-extra" type="text" id="startDest" formControlName="startDestControl">
     </div>
 
     <div class="form-group">
         <label class="form-label m-2" for="targetDest"> Select final destination:</label>
-        <input class="form-control m-2 mx-auto input-extra" type="text" id="targetDest" name="targetDest" ngModel>
+        <input class="form-control m-2 mx-auto input-extra" type="text" id="targetDest" formControlName="targetDestControl">
     </div>
 
     <div class="form-group">
         <label class="m-2" for="one-way"> One-way </label>
-        <input class="form-check-input m-2 mx-auto" type="checkbox" id="one-way" name="isOneWay" [(ngModel)]="isOneWay" [checked]="isOneWay">
+        <input class="form-check-input m-2 mx-auto" type="checkbox" id="one-way" [checked]="isOneWay">
     </div>
 
     <div class="row w-50 m-2 mx-auto">
         <div class="form-group col-lg-6 mx-auto">
-            <label class="m-2" for="departure">Departure:</label> <br>
-            <input class="m-2 input-date" type="date" displayFormat="yyyy-MM-dd" id="departure"
-             value="{{departure | date:'yyyy-MM-dd'}}"
-             useValueAsDate
-              name="departure" [(ngModel)]="departure"> <br>
+            <label class="m-2" for="departure"> Departure: </label> <br>
+            <input class="m-2 input-date" type="date" id="departure" formControlName="departureControl"> <br>
         </div>
         <div *ngIf="!isOneWay" class="form-group col-lg-6 mx-auto">
-            <label class="m-2" for="arrival">Arrival:</label> <br>
-            <input class="m-2 input-date" type="date" id="arrival" value={{arriveDate}} name="arrival" [(ngModel)]="arrival">
+            <label class="m-2" for="arrival"> Arrival: </label> <br>
+            <input class="m-2 input-date" type="date" id="arrival" formControlName="arrivalControl">
         </div>
     </div>
 
-    <button class="btn btn-dark m-5 w-25 h-25" type="submit"> Search destinations! </button>
+    <button class="btn btn-dark m-5 w-25 h-25" type="button" (click)="onSubmit()"> Search destinations! </button>
 
     <p>* by clicking this button you agree to privacy terms violation.</p>
     <p>(just kidding, I'm not interested in your data!)</p>

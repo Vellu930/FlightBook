@@ -1,19 +1,20 @@
-import { DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { NgForm, NgModel } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { formatDate } from '@angular/common';
+import { Component, Inject, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, NgForm} from '@angular/forms';
 import { Destination } from '../destination';
-import { DestinationService } from '../destination.service';
+import { DateUtils } from '../utils/date-utils';
 
 @Component({
   selector: 'app-destination-form',
   templateUrl: './destination-form.component.html',
   styleUrls: ['./destination-form.component.css']
 })
-export class DestinationFormComponent {
+export class DestinationFormComponent implements OnInit {
 
+  searchForm: FormGroup;
   startDest: Destination;
   targetDest: Destination;
+
   departure: Date = new Date();
   arrival: Date = new Date();
   isOneWay: boolean = false;
@@ -21,9 +22,8 @@ export class DestinationFormComponent {
   arriveDate: string = "";
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private service: DestinationService) {
+    private dateUtil: DateUtils,
+    private fb: FormBuilder) {
       this.startDest = {
         id: 23,
         name: 'Brno'
@@ -35,35 +35,29 @@ export class DestinationFormComponent {
       // setting Date to current date plus X days - as default for datepicker
       this.departure.setDate(this.departure.getDate() + 5);
       this.arrival.setDate(this.departure.getDate() + 10);
-      this.departDate = this.customStringDate(this.departure); 
+      this.departDate = this.dateUtil.customStringDate(this.departure); 
+
+      this.searchForm = this.fb.group({
+        startDestControl: 'Brno',
+        targetDestControl: 'London',
+        departureControl: [formatDate(this.departure, 'yyyy-MM-dd', 'en')],
+        arrivalControl: [formatDate(this.arrival, 'yyyy-MM-dd', 'en')]
+      })
   }
 
-  onSubmit(destForm: NgForm) {
-
-    this.isOneWay = destForm.value.isOneWay;
-    this.departure = destForm.value.departure;
-    this.arrival = destForm.value.arrival;
-    this.startDest.name = destForm.value.startDest;
-    this.targetDest.name = destForm.value.targetDest;
-
-    // the Date from datepicker
-    this.departDate = this.customStringDate(this.departure);
-    console.log("Searching flights for destinations: " + this.startDest.name + " - " + this.targetDest.name
+  onSubmit() {
+    this.startDest = this.searchForm.value.startDestControl;
+    this.targetDest = this.searchForm.value.targetDestControl;
+    this.departure = this.searchForm.value.departureControl;
+    this.arrival = this.searchForm.value.arrivalControl;
+    
+    console.log("Searching flights for destinations: " + this.startDest + " - " + this.targetDest
      + " with departure date: " +this.departDate);
   }
 
-  /**
-   * Converts date from Date object to a nice readable string
-   * @param date current date from input or default
-   * @returns string with date in format dd/MM/yyyy
-   */
-  customStringDate(date: Date): string {
-    return new Date(date).getDate() + "/" + (new Date(date).getMonth()+1) + "/" + new Date(date).getFullYear()
-  }
-
   ngOnInit(): void {
-    console.log("Initial dates value: " + this.customStringDate(this.departure) +
-    ", arrival: " + this.customStringDate(this.arrival));
+    console.log("Initial dates value: " + this.dateUtil.customStringDate(this.departure) +
+    ", arrival: " + this.dateUtil.customStringDate(this.arrival));
   }
 
 }
