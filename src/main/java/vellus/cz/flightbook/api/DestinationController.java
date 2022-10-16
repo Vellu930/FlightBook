@@ -1,4 +1,4 @@
-package vellus.cz.flightbook.web;
+package vellus.cz.flightbook.api;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.CrossOrigin;
