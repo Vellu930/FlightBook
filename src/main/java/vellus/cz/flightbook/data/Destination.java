@@ -6,14 +6,15 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 /**
- * Destination is usually a city or place, real or imagined, that can be travelled to...
+ * Destination is an airport
  */
 @Data
-@Entity
+@Entity(name = "airports")
 public class Destination {
 
     @Id
     private Long id;
+    private String iata;
     private String name;
 
     @Override

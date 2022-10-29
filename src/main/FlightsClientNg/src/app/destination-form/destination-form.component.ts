@@ -1,6 +1,6 @@
 import { formatDate } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Destination } from '../destination';
 import { DateUtils } from '../utils/date-utils';
 
@@ -14,15 +14,11 @@ export class DestinationFormComponent implements OnInit {
   searchForm: FormGroup;
   startDest: Destination;
   targetDest: Destination;
-
   departure: Date = new Date();
   arrival: Date = new Date();
-  departDate: string = "";
-  arriveDate: string = "";
   oneWay: boolean = false;
 
   constructor(
-    private dateUtil: DateUtils,
     private fb: FormBuilder) {
     this.startDest = {
       id: 1,
@@ -33,9 +29,8 @@ export class DestinationFormComponent implements OnInit {
       name: ''
     }
     // Date set to current date plus X days - default for datepicker
-    this.departure.setDate(this.departure.getDate() + 5);
-    this.arrival.setDate(this.departure.getDate() + 10);
-    this.departDate = this.dateUtil.customStringDate(this.departure);
+    this.departure.setDate(new Date().getDate() + 5);
+    this.arrival.setDate(new Date().getDate() + 10);
 
     this.searchForm = this.fb.group({
       startDestControl: ['Brno', Validators.required],
@@ -43,8 +38,6 @@ export class DestinationFormComponent implements OnInit {
       oneWayChecker: this.oneWay,
       departureControl: [formatDate(this.departure, 'yyyy-MM-dd', 'en'), [Validators.required]],
       arrivalControl: [formatDate(this.arrival, 'yyyy-MM-dd', 'en')]
-    },{
-      validators: this.compareDates('departureControl', 'arrivalControl')
     })
   }
 
@@ -55,47 +48,50 @@ export class DestinationFormComponent implements OnInit {
     this.arrival = this.searchForm.value.arrivalControl;
 
     console.log("Searching flights for destinations: " + this.startDest + " - " + this.targetDest
-      + " with departure date: " + this.departDate);
+      + " with departure date: " + this.departure);
 
     console.log(this.searchForm);
   }
 
   ngOnInit(): void {
+    this.searchForm.get('departureControl')?.valueChanges.subscribe(
+      value => {
+        this.departure = new Date(value);
+        this.adjustDeparture(new Date(formatDate(value, 'yyyy-MM-dd', 'en')));
+      }
+    )
+    this.searchForm.get('arrivalControl')?.valueChanges.subscribe(
+      value => {
+        this.arrival = new Date(value);
+        this.adjustArrival(new Date(formatDate(value, 'yyyy-MM-dd', 'en')));
+      }
+    )
   }
 
-  onCheckboxChange($event: Event) {
-    this.oneWay = this.searchForm.value.oneWayChecker;
-    if (this.oneWay == true) {
-      this.searchForm.get('arrivalControl')?.setValue(this.searchForm.value.departureControl);
+  adjustDeparture(departureValue: Date): void {
+    const departureMilis:number = new Date(departureValue).getTime();
+    const present:number = new Date().getTime() - 43200000; // minus 0.5 day
+    if (departureMilis < present) {
+      this.searchForm.get('departureControl')?.setValue(formatDate(new Date(), 'yyyy-MM-dd', 'en'));
+    }
+    const arrivalMilis: number = new Date(this.arrival).getTime();
+    if (arrivalMilis < departureMilis) {
+      this.searchForm.get('arrivalControl')?.setValue(formatDate(this.departure, 'yyyy-MM-dd', 'en'));
     }
   }
 
-  get f() {
-    return this.searchForm.controls;
+  adjustArrival(arrivalValue: Date): void {
+    const arrivalMilis: number = new Date(arrivalValue).getTime();
+    const departureMilis: number = new Date(this.departure).getTime() - 43200000;
+    if (departureMilis > arrivalMilis) {
+      this.searchForm.get('departureControl')?.setValue(formatDate(this.arrival, 'yyyy-MM-dd', 'en'));
+    }
   }
 
-  /**
-   * Validator function to prevent departure before present and arrival before departure
-   * @param departure 
-   * @param arrival 
-   * @returns function that sets correct values or null
-   */
-  compareDates(departure: any, arrival: any) {
-
-    // function can return multiple types using '|'   :-O
-    return (form: AbstractControl) : void | null => {
-
-      const depControl:number = new Date(form.value[departure]).getTime();
-      const arriControl:number = new Date(form.value[arrival]).getTime();
-      const present:number = new Date().getTime();
-
-      if (depControl < present) {
-        this.searchForm.get('departureControl')?.setValue(formatDate(new Date(), 'yyyy-MM-dd', 'en'));
-      }
-      if ((arriControl < depControl)) {
-        this.searchForm.get('arrivalControl')?.setValue(form.value[departure]);
-      }
-      return null;
+  onCheckboxChange($event: Event): void {
+    this.oneWay = this.searchForm.value.oneWayChecker;
+    if (new Date(this.arrival).getTime() < this.departure.getTime()) {
+      this.searchForm.get('arrivalControl')?.setValue(this.searchForm.value.departureControl);
     }
   }
 
